@@ -10,13 +10,17 @@ public class Foldernode{
     // defined subnode 
     subNode = new ArrayList<>();
     
-    // constructor for folder file and size
+    // constructor for folder 
     public Foldernode(String foldername, String filename, Integer sizenumber){
-        this.folder = folder;
-        this.file = filename;
-        this.size = sizenumber;
+        this.folder = foldername;
+        //this.file = filename;
+        //this.size = sizenumber;
+
+        // creat an tree node for file and set it as subnode of folder
+        Foldernode file = new Foldernode(filename, sizenumber);
+        this.addsubnode(file);
     }
-    // constructor for creating one instand of foler
+    // constructor for creating files
     public Foldernode(String filename, Integer filesize) {
         this.file = filename;
         this.size = filesize;
@@ -32,9 +36,16 @@ public class Foldernode{
         node.setparent(this);
         subNode.add(node);
     }
+    @Override
+    public String toString(){
+
+        return folder + file + size;
+    }
 
     
 
-}
+    }
+
+
 
 
