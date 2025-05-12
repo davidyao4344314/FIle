@@ -16,7 +16,7 @@ public class App {
     static Foldernode kyoto = new Foldernode("kyoto.jpg", 1);
     static Foldernode miyajima = new Foldernode("miyajima.jpg", 0);
  
-    static Foldernode bad_code = new Foldernode("Bad code", 0);
+    static Foldernode bad_code = new Foldernode("Bad code/", 0);
     public static void main(String[] args) throws Exception {
         System.out.println("Hello, World!");
         // adding subnode/file to the folders
@@ -32,21 +32,30 @@ public class App {
 
         while(true){
             Scanner user_input = new Scanner(System.in);
+            //String curent_position = "name";
+            Foldernode current_posion = name ;
             // prirnting the root 
-            System.out.println(home);
-            System.out.println(name);
-            System.out.println(japan2026);
-            System.out.println(document);
-
-
+            System.out.print(home + "/");
+            System.out.print(name+ "/");
+            System.out.println();
+            
             String choice = user_input.nextLine();
-
+            // if user choosed cd
             if (choice.equals("cd") ){
                 System.out.println("choosed cd");
+            // if user choosedd fd
             }else if (choice.equals("fd")){
                 System.out.println("choosed fd");
+            // if user choose ls 
+            }else if (choice.equals("ls")){
+                // findd all subnode under name
+                for (Foldernode child : current_posion.getSubnode()){
+                    // print out the subnode 
+                    System.out.println(child +"/");
+                }
 
-            } else{
+            }
+            else{
             System.out.println("invlaid input");
 
             }

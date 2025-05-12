@@ -6,9 +6,8 @@ public class Foldernode{
     private String file;
     private Integer size;
     private Foldernode parent = null;
-    private List<Foldernode> 
+    private List<Foldernode>subNode = new ArrayList<>();    
     // defined subnode 
-    subNode = new ArrayList<>();
     
     // constructor for folder 
     public Foldernode(String foldername, String filename, Integer sizenumber){
@@ -32,18 +31,27 @@ public class Foldernode{
     }
     // method add subbnode in folder
     public void addsubnode(Foldernode node){
-        System.out.println("hello");
+        //System.out.println("hello");
         node.setparent(this);
         subNode.add(node);
+    }
+    public List<Foldernode>getSubnode(){
+        return subNode;
     }
     @Override
     public String toString(){
 
-        return folder + file + size;
+        if(file == null) {
+            return folder;
+
+        }
+
+        else{
+            return file;
+
+
+        }
     }
-
-    
-
     }
 
 
