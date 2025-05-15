@@ -13,10 +13,15 @@ public class Foldernode{
     // defined subnode 
     
     /*
-    This method for initializeing the 
+    This method for initializeing the foldernode
+    parameter string : foldername 
+    parameter string : filename
+    parameter Interger : file size
+
      */ 
     public Foldernode(String foldername, String filename, Integer filesize){
         this.folder = foldername;
+        System.out.println(foldername);
         //this.file = filename;
         //this.size = sizenumber;
 
@@ -106,7 +111,6 @@ public class Foldernode{
         for (Foldernode child : subnode ){
             if (child.folder != null){
                 if (child.folder.equals(item)){
-                    System.out.println("Found the object");
                     return child;
                 }
             }
@@ -115,7 +119,17 @@ public class Foldernode{
         return null;
             
 }
-    
+    /* Checkparent for method to find parent of node
+     * return : null (if parent not found return null)
+     * return : this.parent (when parent if found reuturn it)
+     */
+    public Foldernode checkparent(){
+        if (this.parent == null){
+            return null;
+        }
+        else  return this.parent;
+
+    }
 
     @Override
     public String toString(){

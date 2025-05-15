@@ -2,8 +2,8 @@ import java.util.Scanner;
 
 public class App {
     // creat an tree and put node in
-    static Foldernode home = new Foldernode("home",0);
-    static Foldernode name = new Foldernode("yourname", 0);
+    //static Foldernode home = new Foldernode("home",0);
+    static Foldernode name = new Foldernode("home/yourname", 0);
     static Foldernode document = new Foldernode("document", 0);
     static Foldernode download = new Foldernode("download",0 );
     static Foldernode music = new Foldernode("music",0);
@@ -20,7 +20,7 @@ public class App {
     public static void main(String[] args) throws Exception {
         System.out.println("Hello, World!");
         // adding subnode/file to the folders
-        home.addsubnode(name);
+        //home.addsubnode(name);
         name.addsubnode(document);
         name.addsubnode(download);
         name.addsubnode(music);
@@ -35,8 +35,7 @@ public class App {
 
         while(true){  
             // prirnting the root 
-            System.out.print(home );
-            System.out.print(name);
+            System.out.print(name );
             System.out.println();
 
 
@@ -48,14 +47,40 @@ public class App {
             // if user choosed cd
             if (part[0].equals("cd") ){
                 String searchname = part[1];
-                if (searchname == ".."){
-
+                // check if it the cd .. command
+                if (searchname.equals( "..")){
+                    Foldernode past = current_postion.checkparent();
+                    // if no parent for node
+                    if (past == null){
+                        System.out.println("You can't return the root of root");
+                    }
+                    // if they are a parent for node
+                    else{
+                        current_postion = past;
+                    }
                 }
-                Foldernode found = current_postion.search(searchname);
-                // change the current postion
-                current_postion = found;
-                
-
+                // the cd command
+                else{
+                    Foldernode found = current_postion.search(searchname);
+                    // if something is found 
+                    if (found != null){
+                        boolean isfolder = found.isfile();
+                        // change the current postion
+                        current_postion = found;
+                        /* 
+                        if (isfolder == false){
+                            // change the current postion
+                            current_postion = found;
+                        }
+                        else{
+                            System.out.println("is not an file");
+                        }
+                                                */
+                    }
+                    else{
+                    System.out.println("didn't find folder ");
+                    }
+                }
                 // if found is nell
                 System.out.println("choosed cd");
             // if user choosedd fd
