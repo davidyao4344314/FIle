@@ -2,7 +2,7 @@ import java.util.List;
 import java.util.ArrayList;
 /**
  * This method for creating an node the parameter are
- * 
+ * no paremeter 
  */
 public class Foldernode{
     private String folder;
@@ -12,13 +12,15 @@ public class Foldernode{
     private List<Foldernode>subnode = new ArrayList<>();    
     // defined subnode 
     
-    // constructor for folder 
+    /*
+    This method for initializeing the 
+     */ 
     public Foldernode(String foldername, String filename, Integer filesize){
         this.folder = foldername;
         //this.file = filename;
         //this.size = sizenumber;
 
-        // creat an tree node for file and size  
+        // creat an tree node for file and size 
         Foldernode file = new Foldernode(filename, filesize);
         // set it as subnode of folder
         this.addsubnode(file);
@@ -80,16 +82,51 @@ public class Foldernode{
         }
         this.size = total;
     }
+    /*
+     * The method to check is it file or not
+     * return : true if it is an file
+     * return : flase if it not an file
+     */
+    public boolean isfile(){
+        if(this.file != null){
+            return true;
+        
+        }else{
+            return false;
+        }
+
+    }
+    /*
+     * For searching child of an node
+     * paremeter : item (the search object)
+     * return  : child (if it found the child)
+     * return : null (if they havent find anything)
+     */
+    public Foldernode search(String item){
+        for (Foldernode child : subnode ){
+            if (child.folder != null){
+                if (child.folder.equals(item)){
+                    System.out.println("Found the object");
+                    return child;
+                }
+            }
+            }
+
+        return null;
+            
+}
+    
+
     @Override
     public String toString(){
 
         if(file == null) {
-            return folder;
+            return folder + "/";
 
         }
 
         else{
-            return file;
+            return file + ".";
 
 
         }
