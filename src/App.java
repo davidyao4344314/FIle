@@ -3,20 +3,20 @@ import java.util.Scanner;
 public class App {
     // creat an tree and put node in
     //static Foldernode home = new Foldernode("home",0);
-    static Foldernode name = new Foldernode("home/yourname", 0);
-    static Foldernode document = new Foldernode("document", 0);
-    static Foldernode download = new Foldernode("download",0 );
-    static Foldernode music = new Foldernode("music",0);
+    static Foldernode name = new Foldernode("home/yourname", null, 0);
+    static Foldernode document = new Foldernode("document",null, 0);
+    static Foldernode download = new Foldernode("download",null,0 );
+    static Foldernode music = new Foldernode("music",null, 0);
 
     static Foldernode photos = new Foldernode("photo","passport.jpg",1);
-    static Foldernode photoid = new Foldernode("photoid.png", 0);
+    static Foldernode photoid = new Foldernode("photoid.png",null,0);
 
 
     static Foldernode japan2026 = new Foldernode("japan2026","tokoy.jpg", 1);
     static Foldernode kyoto = new Foldernode("kyoto.jpg", 1);
     static Foldernode miyajima = new Foldernode("miyajima.jpg", 1);
  
-    static Foldernode bad_code = new Foldernode("Bad code/", 0);
+    static Foldernode bad_code = new Foldernode("Bad code",0);
     public static void main(String[] args) throws Exception {
         System.out.println("Hello, World!");
         // adding subnode/file to the folders
@@ -35,8 +35,7 @@ public class App {
 
         while(true){  
             // prirnting the root 
-            System.out.print(name );
-            System.out.println();
+            current_postion.printallroot();
 
 
             Scanner user_input = new Scanner(System.in);
@@ -61,10 +60,11 @@ public class App {
                 }
                 // the cd command
                 else{
+                    // use the search method
                     Foldernode found = current_postion.search(searchname);
                     // if something is found 
                     if (found != null){
-                        boolean isfolder = found.isfile();
+                        //boolean isfolder = found.isfile();
                         // change the current postion
                         current_postion = found;
                         /* 
@@ -77,6 +77,7 @@ public class App {
                         }
                                                 */
                     }
+                    // if it didnt found folder
                     else{
                     System.out.println("didn't find folder ");
                     }
@@ -107,9 +108,14 @@ public class App {
             // get total size 
             int total_size = current_postion.getsize();
             System.out.println("Total size:(" + total_size + "KB)");
+            // if user input rm
             }else if (part[0].equals("rm")){
+                String deletfile = part[1];
+                current_postion.removefile(deletfile);
 
-
+            }else if (part[0].equals("rmdir")){
+                String deletfile = part[1];
+                current_postion.removefile(deletfile);
             }
             else{
             System.out.println("invlaid input");

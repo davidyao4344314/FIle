@@ -1,8 +1,8 @@
 import java.util.List;
 import java.util.ArrayList;
 /**
- * This method for creating an node the parameter are
- * no paremeter 
+ * This class for  an node that store evrything
+ * no parameter
  */
 public class Foldernode{
     private String folder;
@@ -20,15 +20,23 @@ public class Foldernode{
 
      */ 
     public Foldernode(String foldername, String filename, Integer filesize){
-        this.folder = foldername;
-        System.out.println(foldername);
+        //this.folder = foldername;
+        if (filename== null){
+            this.folder = foldername;
+            this.file = null;
+            this.size = filesize;
+        }
+        else{
+            // creat an tree node for file and size 
+            this.folder = foldername;
+            Foldernode file = new Foldernode(filename, filesize);
+            // set it as subnode of folder
+            this.addsubnode(file);            
+
+        }
+        //System.out.println(this.folder);
         //this.file = filename;
         //this.size = sizenumber;
-
-        // creat an tree node for file and size 
-        Foldernode file = new Foldernode(filename, filesize);
-        // set it as subnode of folder
-        this.addsubnode(file);
     }
     // constructor for creating files
     public Foldernode(String filename, Integer filesize) {
@@ -47,7 +55,7 @@ public class Foldernode{
         subnode.add(node);
 
         this.totalsize();
-        System.out.println(this.size);
+        //System.out.println(this.size);
         //int parentsize = this.getsize();
         //int childsize = node.getsize();
     
@@ -73,6 +81,9 @@ public class Foldernode{
             
         }
     }
+    /*The method for calculating total size of folder
+     * no parameter and no return
+     */
     public void totalsize(){
         // if no children then return 
         if (subnode.isEmpty()){
@@ -130,6 +141,45 @@ public class Foldernode{
         else  return this.parent;
 
     }
+    /*
+    This mathod is for print the root
+    dosnt has any paremeter and returns.
+     * 
+     */
+    public void printallroot(){
+        // if they are no parennt for node then return
+        if(this.parent == null){
+            System.out.println(this);
+            return;
+        }
+        Foldernode current = this.parent;
+        // keep printing untill all parent is printed
+        while(current != null){
+            System.out.print(current);
+            current = current.parent;
+        // print out current location
+        System.out.print(this);
+        System.out.println();
+        }
+    }
+    public void removefile(String target){
+        for (Foldernode child : subnode){
+            if (child.file != null){
+                System.out.println("run in to delet");
+                if (child.file.equals(target)){
+                    subnode.remove(child);
+                    return;
+                }            
+            }
+
+                }
+                System.out.println("file dosnt exist");
+
+        }
+
+    
+   /*
+    */ 
 
     @Override
     public String toString(){
