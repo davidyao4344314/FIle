@@ -1,13 +1,19 @@
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeMap;
+
 /**
  * This  a class for Folder struct conforming to FilesystemNode ,
  * which additionally contains child nodes
  * no parameter
  */
 public class Foldernode extends FilesystemNode   {
-    // all the subnodes container
-    private List<FilesystemNode> subnodes = new ArrayList<>();
+    // use treem map can automactilay sort of alphatical order for ls
+    // this is for all sub folders
+    private  Map<String, FilesystemNode> subFolders = new TreeMap<>();
+    // this for all subfiles
+    private  Map<String, FilesystemNode> subFiles = new TreeMap<>();
     // initlizing folder by name
     public Foldernode(String foldername){
         // initliazing the base class node by name
@@ -18,16 +24,16 @@ public class Foldernode extends FilesystemNode   {
     public void addsubnode(FilesystemNode node){
         //System.out.println("hello");
         node.setparent(this);
-        subnodes.add(node);
+        if(node.isfile()){
+            subFiles.put(node.name,node);
+        }
+        else{
+            subFolders.put(node.name,node);
+        }
+
 
     }
-    /*
-     * method for finding the sunode
-     * return foldernode: subnode
-     */
-    public List<FilesystemNode>getSubnodes(){
-        return subnodes;
-    }
+
 
     /* Method for make new folder in folder node
      * parameter String : path
@@ -73,19 +79,17 @@ public class Foldernode extends FilesystemNode   {
      * return int: total
      */
     public int totalsize(){
-
-        // if folder ,sum all subnode.
-        // if no children then return
-        if (subnodes.isEmpty()){
-            return 0;
-        }
+        
         int total = 0;
-        // check all the subnode
-        for(FilesystemNode child : subnodes){
-            // add the size
-            total +=child.totalsize();
-            //total += child.size;
+        // check all the subnode summary for total files
+        for (Map.Entry<String, FilesystemNode> entry : subFolders.entrySet()) {
+            total+=entry.getValue().totalsize();
         }
+        // for all files size 
+        for (Map.Entry<String, FilesystemNode> entry : subFiles.entrySet()) {
+            total+=entry.getValue().totalsize();
+        }
+
 
         return total;
     }
@@ -104,15 +108,9 @@ public class Foldernode extends FilesystemNode   {
      * return : null (if they havent find anything)
      */
     public Foldernode search(String item){
-        for (FilesystemNode child : subnodes){
-            if (child.isfile() ==false){
-                if (child.name.equals(item) ){
-                    return (Foldernode)child;
-                }
-            }
-        }
 
-        return null;
+
+        return (Foldernode) subFolders.get(item);
 
     }
     /*
@@ -128,25 +126,28 @@ public class Foldernode extends FilesystemNode   {
         else  return (Foldernode) parent;
 
     }
+    /*
+    This method is for ls in this method it show name in alpbaticle order
+    parameter no parameter
+    no returns
+     */
     public void ls(){
+        
+        // list folder first in alphabetical order
+        for (Map.Entry<String, FilesystemNode> entry : subFolders.entrySet()) {
+            FilesystemNode node = entry.getValue();
+            System.out.println(node + ": (" + node.totalsize()+"KB)");
 
-        //int total_size = 0;
-        // findd all subnode under current postion
-        for (FilesystemNode child : subnodes){
-            // print out the subnode
-            int file_size = child.totalsize();
-            System.out.print(child );
-            //System.out.print("/");
-            System.out.print("(");
-            System.out.print(file_size);
-            System.out.print("KB");
-            System.out.print(")");
-            //total_size += file_size;
-            System.out.println();
+        }
+        // list the files other folder in alphabetical order
+        for (Map.Entry<String, FilesystemNode> entry : subFiles.entrySet()) {
+            FilesystemNode node = entry.getValue();
+            System.out.println(node + ": (" + node.totalsize()+"KB)");
+
         }
         // get total size
         int total_size = totalsize();
-        System.out.println("Total size:(" + total_size + "KB)");
+        System.out.println("\nTotal size:(" + total_size + "KB)");
     }
 
     /*
@@ -157,33 +158,30 @@ public class Foldernode extends FilesystemNode   {
     public void printallroot(){
         System.out.println(getFullPath());
     }
+    /*
+    this is an method for remove file it remove file from node
+    parameter String : target
+     */
     public void removefile(String target){
-        for (FilesystemNode child : subnodes){
-            if (child.isfile() ==true){
-                System.out.println("run in to delet");
-                if (child.name.equals(target)){
-                    subnodes.remove(child);
-                    return;
-                }
-            }
-
+        // find target
+        FilesystemNode file = subFiles.get(target);
+        // if file dosn't exist print error message and return
+        if (file==null) {
+            System.out.println("file:"+target+" dosnt exist");
+            return;
         }
-        System.out.println("file dosnt exist");
-
+        // remove the subfiles
+        subFiles.remove(target);
     }
-
+    // the file and subfolder under folder can't be deleted fix later
     public void removefolder(String target){
-        for (FilesystemNode child : subnodes){
-            if (child.isfile()==false){
-                System.out.println("run in to delet");
-                if (child.name.equals(target)){
-                    subnodes.remove(child);
-                    return;
-                }
-            }
-
+        FilesystemNode file = subFolders.get(target);
+        if (file==null) {
+            System.out.println("Folder:"+target+" dosnt exist");
+            return;
         }
-        System.out.println("folder dosnt exist");
+        subFolders.remove(target);
+
 
     }
 
