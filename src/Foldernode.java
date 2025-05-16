@@ -1,5 +1,3 @@
-import java.util.List;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -79,13 +77,13 @@ public class Foldernode extends FilesystemNode   {
      * return int: total
      */
     public int totalsize(){
-        
+
         int total = 0;
         // check all the subnode summary for total files
         for (Map.Entry<String, FilesystemNode> entry : subFolders.entrySet()) {
             total+=entry.getValue().totalsize();
         }
-        // for all files size 
+        // for all files size
         for (Map.Entry<String, FilesystemNode> entry : subFiles.entrySet()) {
             total+=entry.getValue().totalsize();
         }
@@ -132,7 +130,7 @@ public class Foldernode extends FilesystemNode   {
     no returns
      */
     public void ls(){
-        
+
         // list folder first in alphabetical order
         for (Map.Entry<String, FilesystemNode> entry : subFolders.entrySet()) {
             FilesystemNode node = entry.getValue();
@@ -173,13 +171,38 @@ public class Foldernode extends FilesystemNode   {
         // remove the subfiles
         subFiles.remove(target);
     }
-    // the file and subfolder under folder can't be deleted fix later
+    /*
+    this method is for deleting subfolder  and sub filesfiles
+    parameter no parmeters
+    returns no returns 
+     */
+    public void deleteSubNode(){
+        //System.out.println("delete folder "+getFullPath());
+        // delet all sub files in the tree map
+        subFiles.clear();
+        // delete all sub folders(include sub sub folder and files)
+        for (Map.Entry<String, FilesystemNode> entry : subFolders.entrySet()) {
+            Foldernode subFoder = (Foldernode)entry.getValue();
+            System.out.println("Will delete subfolder"+subFoder.getFullPath());
+            subFoder.deleteSubNode();
+        }
+        // delet sub files in the tree map 
+        subFolders.clear();
+
+    }
+    /*
+        rmdir <foldername> to delete a folder in the current folder. If no such folder exists, tell
+    the user
+    rmdir also deletes all the files and subfolders contained within the specified
+    folder
+     */
     public void removefolder(String target){
-        FilesystemNode file = subFolders.get(target);
-        if (file==null) {
+        Foldernode subFoder = (Foldernode)subFolders.get(target);
+        if (subFoder==null) {
             System.out.println("Folder:"+target+" dosnt exist");
             return;
         }
+        subFoder.deleteSubNode();
         subFolders.remove(target);
 
 
@@ -189,3 +212,5 @@ public class Foldernode extends FilesystemNode   {
 
 
 }
+
+
