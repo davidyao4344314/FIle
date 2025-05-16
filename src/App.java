@@ -50,11 +50,12 @@ public class App {
 
             Scanner user_input = new Scanner(System.in);
             String choice = user_input.nextLine( );
-            String[] part = choice.toLowerCase().split(" ");
+            String[] part = choice.split(" ");
 
 
             //String choice = user_input.nextLine();
             // if user choosed cd
+            part[0]=part[0].toLowerCase();
             if (part[0].equals("cd") ){
                 String searchname = part[1];
                 // check if it the cd .. command

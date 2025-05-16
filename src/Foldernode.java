@@ -34,7 +34,14 @@ public class Foldernode extends FilesystemNode   {
      * no return
      */
     public Foldernode mkdir(String path){
+
         // new folder
+        String reason = FilesystemNode.checkName(path, false);
+        if(reason !=null){
+            System.out.println(reason);
+            return null;
+        }
+
         Foldernode folder = new Foldernode( path);
         addsubnode(folder);
         return folder;
@@ -47,6 +54,12 @@ public class Foldernode extends FilesystemNode   {
     return file : newfile
      */
     public File touch(String path,int size){
+        String reason = FilesystemNode.checkName(path, true);
+        if(reason !=null){
+            System.out.println(reason);
+            return null;
+        }
+
         if (size<1 || size>4194304 ){
             System.out.println("Size Must more than 1KB and less than 4 GB（4194304）");
             return null;
@@ -57,7 +70,7 @@ public class Foldernode extends FilesystemNode   {
 
     }
     /*The method for calculating total size of folder
-     * return int: total 
+     * return int: total
      */
     public int totalsize(){
 
@@ -158,6 +171,7 @@ public class Foldernode extends FilesystemNode   {
         System.out.println("file dosnt exist");
 
     }
+
     public void removefolder(String target){
         for (FilesystemNode child : subnodes){
             if (child.isfile()==false){
@@ -172,6 +186,8 @@ public class Foldernode extends FilesystemNode   {
         System.out.println("folder dosnt exist");
 
     }
+
+
 
 
 }
