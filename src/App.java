@@ -116,6 +116,7 @@ public class App {
             current_postion.removefolder(deletfile);
             }
             else if (part[0].equals("mkdir")){
+                // check if input is null or not
                 if (part.length<= 1){
                     System.out.println("File and folder names must contain at least one (1) character");
                     continue;                    
@@ -126,6 +127,7 @@ public class App {
             // if user choose touch
             else if (part[0].equals("touch")){
                 int size=1;
+                // check input is null ornot 
                 if (part.length<= 1){
                     System.out.println("File and folder names must contain at least one (1) character");
                     continue;
