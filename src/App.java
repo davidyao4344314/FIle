@@ -57,7 +57,13 @@ public class App {
             // if user choosed cd
             part[0]=part[0].toLowerCase();
             if (part[0].equals("cd") ){
+                int partlenth = part.length;
+                if (partlenth <= 1){
+                    System.out.println("Cd requires pass parameter");
+                    continue;
+                }
                 String searchname = part[1];
+                
                 // check if it the cd .. command
                 if (searchname.equals( "..")){
                     Foldernode past = current_postion.checkparent();
