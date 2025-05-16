@@ -18,7 +18,12 @@ public class Foldernode extends FilesystemNode   {
         super(foldername);
     }
 
-    // method add subbnode in folder
+    /*
+     * This method is for adding subnode to parent node
+     * parameter file or foolder: FilesystemNode 
+     * parameter file or folder : node
+     * 
+     */
     public void addsubnode(FilesystemNode node){
         //System.out.println("hello");
         node.setparent(this);
@@ -63,7 +68,7 @@ public class Foldernode extends FilesystemNode   {
             System.out.println(reason);
             return null;
         }
-
+        // if size is smaller than 1 kb or bigger than 4194304 kb 
         if (size<1 || size>4194304 ){
             System.out.println("Size Must more than 1KB and less than 4 GB（4194304）");
             return null;
@@ -121,6 +126,7 @@ public class Foldernode extends FilesystemNode   {
         if (this.parent == null){
             return null;
         }
+        // return the parent
         else  return (Foldernode) parent;
 
     }
