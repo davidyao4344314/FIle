@@ -3,20 +3,9 @@ import java.util.Scanner;
 public class App {
     // creat an tree and put node in
     //static Foldernode home = new Foldernode("home",0);
-    static Foldernode name = new Foldernode("home/yourname", null, 0);
-    static Foldernode document = new Foldernode("document",null, 0);
-    static Foldernode download = new Foldernode("download",null,0 );
-    static Foldernode music = new Foldernode("music",null, 0);
-
-    static Foldernode photos = new Foldernode("photo","passport.jpg",1);
-    static Foldernode photoid = new Foldernode("photoid.png",null,0);
+    static Foldernode root = new Foldernode("home");
 
 
-    static Foldernode japan2026 = new Foldernode("japan2026","tokoy.jpg", 1);
-    static Foldernode kyoto = new Foldernode("kyoto.jpg", 1);
-    static Foldernode miyajima = new Foldernode("miyajima.jpg", 1);
-
-    static Foldernode bad_code = new Foldernode("Bad code",0);
 
     public static int convertToInt(String str) {
         try {
@@ -29,28 +18,31 @@ public class App {
     }
 
     public static void main(String[] args) throws Exception {
-        System.out.println("Hello, World!");
-        // adding subnode/file to the folders
-        //home.addsubnode(name);
-        name.addsubnode(document);
-        name.addsubnode(download);
-        name.addsubnode(music);
-        name.addsubnode(photos);
-        photos.addsubnode(japan2026);
-        japan2026.addsubnode(kyoto);
-        japan2026.addsubnode(miyajima);
-        download.addsubnode(bad_code);
 
-        // inititalled current position
 
-        Foldernode current_postion = name ;
+        Foldernode documents = root.mkdir("documents");
+        documents.touch("cv.pdf",3);
+        documents.touch("data.dat",3);
+
+        Foldernode photos = root.mkdir("photos");
+        photos.touch("passport.jpg",10);
+        photos.touch("photoid.png",12);
+        Foldernode japan2026 = photos.mkdir("japan2026");
+        japan2026.touch("tokyo.png",300);
+        japan2026.touch("kyoto.png",330);
+        japan2026.touch("miyajima.gif",300);
+
+
+        Foldernode current_postion = root ;
 
         // creat the music file
+        Foldernode music = root.mkdir("music");
         for (int i = 0; i <= 10; i++) {
-            music.addsubnode(new Foldernode("music" + i +".mp3", 1));
+            //music.addsubnode(new Folder("music" + i +".mp3", 1));
+            music.touch(""+i+".mp3",i);
 
         }
-        
+
         while(true){
             // prirnting the root
             current_postion.printallroot();
@@ -58,7 +50,8 @@ public class App {
 
             Scanner user_input = new Scanner(System.in);
             String choice = user_input.nextLine( );
-            String[] part = choice.split(" ");
+            String[] part = choice.toLowerCase().split(" ");
+
 
             //String choice = user_input.nextLine();
             // if user choosed cd
@@ -108,24 +101,8 @@ public class App {
                 // if user choose ls
 
             }else if (part[0].equals("ls")){
-                current_postion.totalsize();
-                //int total_size = 0;
-                // findd all subnode under current postion
-                for (Foldernode child : current_postion.getsubnode()){
-                    // print out the subnode
-                    int file_size = child.getsize();
-                    System.out.print(child );
-                    //System.out.print("/");
-                    System.out.print("(");
-                    System.out.print(file_size);
-                    System.out.print("KB");
-                    System.out.print(")");
-                    //total_size += file_size;
-                    System.out.println();
-                }
-                // get total size
-                int total_size = current_postion.getsize();
-                System.out.println("Total size:(" + total_size + "KB)");
+                current_postion.ls();
+
                 // if user input rm
             }else if (part[0].equals("rm")){
                 // delet file from part 1 of the input
@@ -143,29 +120,16 @@ public class App {
             }
             // if user choose touch
             else if (part[0].equals("touch")){
-                //String filename = part[1];
-                //Current_postion.touch(filename);
-
                 int size=1;
-
-                if (part.length> 2){
-                    //String type = part[1];
-                        System.out.println("contain .jpg png jpeg");
-                    }
-
+                if (part.length>2)
                     size=convertToInt(part[2]);
-                // check if they input an valid size that need to be bigger than 1
                 if(size>=1)
-                    // check if the file has eith jpg png and jpeg
-                    if (part[1].matches("([a-z0-9]+/)*[a-z0-9]+\\.(jpg|png|jpeg)")) {
-                        current_postion.touch(part[1],size);
-                    }
-                    else{
-                        System.out.println("dosnt contain type of file");
-                    }
+
+                    current_postion.touch(part[1],size);
                 else{
-                    System.out.println("Please input size");
+                    System.out.println("invalited parmeter for touch !!!!");
                 }
+
             }
             else{
                 System.out.println("invlaid input");
@@ -173,4 +137,4 @@ public class App {
 
         }
     }
-    }
+}

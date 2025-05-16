@@ -1,131 +1,79 @@
 import java.util.List;
 import java.util.ArrayList;
 /**
- * This class for  an node that store evrything
+ * This  a class for Folder struct conforming to FilesystemNode ,
+ * which additionally contains child nodes
  * no parameter
  */
-public class Foldernode{
-    private String folder;
-    private String file;
-    private Integer size;
-    private Foldernode parent = null;
-    private List<Foldernode>subnode = new ArrayList<>();
-    // defined subnode
-
-    /*
-    This method for initializeing the foldernode
-    parameter string : foldername
-    parameter string : filename
-    parameter Interger : file size
-
-     */
-    public Foldernode(String foldername, String filename, Integer filesize){
-        //this.folder = foldername;
-        if (filename== null){
-            this.folder = foldername;
-            this.file = null;
-            this.size = filesize;
-        }
-        else{
-            // creat an tree node for file and size
-            this.folder = foldername;
-            Foldernode file = new Foldernode(filename, filesize);
-            // set it as subnode of folder
-            this.addsubnode(file);
-
-        }
-        //System.out.println(this.folder);
-        //this.file = filename;
-        //this.size = sizenumber;
+public class Foldernode extends FilesystemNode   {
+    // all the subnodes container
+    private List<FilesystemNode> subnodes = new ArrayList<>();
+    // initlizing folder by name
+    public Foldernode(String foldername){
+        // initliazing the base class node by name
+        super(foldername);
     }
-    // constructor for creating files
-    public Foldernode(String filename, Integer filesize) {
-        this.file = filename;
-        this.size = filesize;
 
-    }
-    // set the parent of the node
-    public void setparent(Foldernode parent ){
-        this.parent = parent;
-    }
     // method add subbnode in folder
-    public void addsubnode(Foldernode node){
+    public void addsubnode(FilesystemNode node){
         //System.out.println("hello");
         node.setparent(this);
-        subnode.add(node);
+        subnodes.add(node);
 
-        this.totalsize();
-        //System.out.println(this.size);
-        //int parentsize = this.getsize();
-        //int childsize = node.getsize();
-
-        // prevent it for not being null
-
-        // add file size to the foldeer size
-        //this.size += node.size;
-        //int currentsize =+ this.size;
-        //System.out.println("this.size ="+ currentsize);
-        // set the folder size with new size
-
-        //this.size = parentsize;
     }
     /*
-     * method for finding the sunode 
+     * method for finding the sunode
      * return foldernode: subnode
      */
-    public List<Foldernode>getsubnode(){
-        return subnode;
+    public List<FilesystemNode>getSubnodes(){
+        return subnodes;
     }
-    public int getsize(){
-        if (this.size == null){
-            return 0;
-        }
-        else{
-            return this.size ;
 
-        }
-    }
     /* Method for make new folder in folder node
      * parameter String : path
-     * no return 
+     * no return
      */
-    public void mkdir(String path){
-        // new folder 
-        Foldernode newfile = new Foldernode( path,null,0);
-        addsubnode(newfile);
+    public Foldernode mkdir(String path){
+        // new folder
+        Foldernode folder = new Foldernode( path);
+        addsubnode(folder);
+        return folder;
 
     }
-    public void touch(String path,int size){
-         if (size<1 || size>4194304 ){
-             System.out.println("Size Must more than 1KB and less than 4 GB（4194304）");
-             return;
-         }
-        Foldernode newfile = new Foldernode( path, size);
+    /*
+    Method for touch creating file
+    parameter String : path
+    parameter int : size
+    return file : newfile
+     */
+    public File touch(String path,int size){
+        if (size<1 || size>4194304 ){
+            System.out.println("Size Must more than 1KB and less than 4 GB（4194304）");
+            return null;
+        }
+        File newfile = new File( path, size);
         addsubnode(newfile);
+        return newfile;
 
     }
     /*The method for calculating total size of folder
-     * no parameter and no return
+     * return int: total 
      */
     public int totalsize(){
-       // if is file ,just return size
-        if (isfile()){
-            return size;
 
-        }
         // if folder ,sum all subnode.
         // if no children then return
-        if (subnode.isEmpty()){
+        if (subnodes.isEmpty()){
             return 0;
         }
         int total = 0;
         // check all the subnode
-        for(Foldernode child : subnode ){
+        for(FilesystemNode child : subnodes){
             // add the size
             total +=child.totalsize();
             //total += child.size;
         }
-        this.size = total;
+
         return total;
     }
     /*
@@ -134,13 +82,7 @@ public class Foldernode{
      * return : flase if it not an file
      */
     public boolean isfile(){
-        if(this.file != null){
-            return true;
-
-        }else{
             return false;
-        }
-
     }
     /*
      * For searching child of an node
@@ -149,10 +91,10 @@ public class Foldernode{
      * return : null (if they havent find anything)
      */
     public Foldernode search(String item){
-        for (Foldernode child : subnode ){
-            if (child.folder != null){
-                if (child.folder.equals(item)){
-                    return child;
+        for (FilesystemNode child : subnodes){
+            if (child.isfile() ==false){
+                if (child.name.equals(item) ){
+                    return (Foldernode)child;
                 }
             }
         }
@@ -160,46 +102,54 @@ public class Foldernode{
         return null;
 
     }
-    /* 
+    /*
     Checkparent for method to find parent of node
      * return : null (if parent not found return null)
      * return : this.parent (when parent if found reuturn it)
      */
     public Foldernode checkparent(){
-        // if no parent 
+        // if no parent
         if (this.parent == null){
             return null;
         }
-        else  return this.parent;
+        else  return (Foldernode) parent;
 
     }
+    public void ls(){
+
+        //int total_size = 0;
+        // findd all subnode under current postion
+        for (FilesystemNode child : subnodes){
+            // print out the subnode
+            int file_size = child.totalsize();
+            System.out.print(child );
+            //System.out.print("/");
+            System.out.print("(");
+            System.out.print(file_size);
+            System.out.print("KB");
+            System.out.print(")");
+            //total_size += file_size;
+            System.out.println();
+        }
+        // get total size
+        int total_size = totalsize();
+        System.out.println("Total size:(" + total_size + "KB)");
+    }
+
     /*
     This mathod is for print the root
     dosnt has any paremeter and returns.
      *
      */
     public void printallroot(){
-        // if they are no parennt for node then return
-        if(this.parent == null){
-            System.out.println(this);
-            return;
-        }
-        Foldernode current = this.parent;
-        // keep printing untill all parent is printed
-        while(current != null){
-            System.out.print(current);
-            current = current.parent;
-            // print out current location
-            System.out.print(this);
-            System.out.println();
-        }
+        System.out.println(getFullPath());
     }
     public void removefile(String target){
-        for (Foldernode child : subnode){
-            if (child.file != null){
+        for (FilesystemNode child : subnodes){
+            if (child.isfile() ==true){
                 System.out.println("run in to delet");
-                if (child.file.equals(target)){
-                    subnode.remove(child);
+                if (child.name.equals(target)){
+                    subnodes.remove(child);
                     return;
                 }
             }
@@ -209,11 +159,11 @@ public class Foldernode{
 
     }
     public void removefolder(String target){
-        for (Foldernode child : subnode){
-            if (child.folder != null){
+        for (FilesystemNode child : subnodes){
+            if (child.isfile()==false){
                 System.out.println("run in to delet");
-                if (child.folder.equals(target)){
-                    subnode.remove(child);
+                if (child.name.equals(target)){
+                    subnodes.remove(child);
                     return;
                 }
             }
@@ -222,23 +172,6 @@ public class Foldernode{
         System.out.println("folder dosnt exist");
 
     }
-    /*
-     */
-
-    @Override
-    public String toString(){
-
-        if(file == null) {
-            return folder + "/";
-
-        }
-
-        else{
-            return file + ".";
 
 
-        }
-    }
 }
-
-
