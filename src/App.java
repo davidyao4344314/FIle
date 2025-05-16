@@ -17,15 +17,17 @@ public class App {
     static Foldernode miyajima = new Foldernode("miyajima.jpg", 1);
 
     static Foldernode bad_code = new Foldernode("Bad code",0);
+
     public static int convertToInt(String str) {
         try {
-            // Try parsing the string as an integer
+            // try to past intger
             return Integer.parseInt(str);
         } catch (NumberFormatException e) {
-            // If an exception occurs, return -1
+            // if an exception occur return -1
             return -1;
         }
     }
+
     public static void main(String[] args) throws Exception {
         System.out.println("Hello, World!");
         // adding subnode/file to the folders
@@ -40,8 +42,15 @@ public class App {
         download.addsubnode(bad_code);
 
         // inititalled current position
+
         Foldernode current_postion = name ;
 
+        // creat the music file
+        for (int i = 0; i <= 10; i++) {
+            music.addsubnode(new Foldernode("music" + i +".mp3", 1));
+
+        }
+        
         while(true){
             // prirnting the root
             current_postion.printallroot();
@@ -102,7 +111,7 @@ public class App {
                 current_postion.totalsize();
                 //int total_size = 0;
                 // findd all subnode under current postion
-                for (Foldernode child : current_postion.getSubnode()){
+                for (Foldernode child : current_postion.getsubnode()){
                     // print out the subnode
                     int file_size = child.getsize();
                     System.out.print(child );
@@ -119,20 +128,49 @@ public class App {
                 System.out.println("Total size:(" + total_size + "KB)");
                 // if user input rm
             }else if (part[0].equals("rm")){
+                // delet file from part 1 of the input
                 String deletfile = part[1];
                 current_postion.removefile(deletfile);
 
             }else if (part[0].equals("rmdir")){
-                String deletfolder = part[1];
-                current_postion.removefolder(deletfolder);
+                String deletfile = part[1];
+                current_postion.removefolder(deletfile);
             }
 
-            
+            else if (part[0].equals("mkdir")){
+                String file = part[1];
+                current_postion.mkdir(file);
+            }
+            // if user choose touch
+            else if (part[0].equals("touch")){
+                //String filename = part[1];
+                //Current_postion.touch(filename);
+
+                int size=1;
+
+                if (part.length> 2){
+                    //String type = part[1];
+                        System.out.println("contain .jpg png jpeg");
+                    }
+
+                    size=convertToInt(part[2]);
+                // check if they input an valid size that need to be bigger than 1
+                if(size>=1)
+                    // check if the file has eith jpg png and jpeg
+                    if (part[1].matches("([a-z0-9]+/)*[a-z0-9]+\\.(jpg|png|jpeg)")) {
+                        current_postion.touch(part[1],size);
+                    }
+                    else{
+                        System.out.println("dosnt contain type of file");
+                    }
+                else{
+                    System.out.println("Please input size");
+                }
+            }
             else{
                 System.out.println("invlaid input");
             }
 
         }
-    
     }
-}
+    }

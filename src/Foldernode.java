@@ -69,7 +69,11 @@ public class Foldernode{
 
         //this.size = parentsize;
     }
-    public List<Foldernode>getSubnode(){
+    /*
+     * method for finding the sunode 
+     * return foldernode: subnode
+     */
+    public List<Foldernode>getsubnode(){
         return subnode;
     }
     public int getsize(){
@@ -81,7 +85,25 @@ public class Foldernode{
 
         }
     }
+    /* Method for make new folder in folder node
+     * parameter String : path
+     * no return 
+     */
+    public void mkdir(String path){
+        // new folder 
+        Foldernode newfile = new Foldernode( path,null,0);
+        addsubnode(newfile);
 
+    }
+    public void touch(String path,int size){
+         if (size<1 || size>4194304 ){
+             System.out.println("Size Must more than 1KB and less than 4 GB（4194304）");
+             return;
+         }
+        Foldernode newfile = new Foldernode( path, size);
+        addsubnode(newfile);
+
+    }
     /*The method for calculating total size of folder
      * no parameter and no return
      */
@@ -138,11 +160,13 @@ public class Foldernode{
         return null;
 
     }
-    /* Checkparent for method to find parent of node
+    /* 
+    Checkparent for method to find parent of node
      * return : null (if parent not found return null)
      * return : this.parent (when parent if found reuturn it)
      */
     public Foldernode checkparent(){
+        // if no parent 
         if (this.parent == null){
             return null;
         }
